@@ -1,18 +1,42 @@
-from pathlib import Path
 import subprocess
-from typing import Annotated
 import typer
-
+from pathlib import Path
+from typing import Annotated
 from utils.vermgr import Version, getver
 
 app = typer.Typer()
 
+# Subcommand: pg bin
 @app.callback(invoke_without_command=True)
-def main(ver:  Annotated[str, typer.Argument(help="available postgresql version (i.e. 15, 15.4, 16devel)")],
-         prgm: Annotated[str, typer.Argument(help="a program in the bin directory")],
-         args: Annotated[list[str], typer.Argument(help="options and arguments for that program (data, logfile and port number is auto included)")] = None):
+def main(
+         ver:
+         Annotated[str, typer.Argument(
+             help="available postgresql version (i.e. 15, 15.4, 16devel)"
+         )],
+
+         prgm:
+         Annotated[str, typer.Argument(
+             help="a program in the bin directory"
+                  " (i.e. pg_ctl, psql, createdb)"
+         )],
+
+         args:
+         Annotated[list[str], typer.Argument(
+             help="options and arguments for that program (data, logfile and"
+                  "port number is auto included)"
+         )] = None
+         ):
     """
-    bruh
+    Exmaple:\n
+      pg bin 15.5 initdb\n
+      pg bin 15.5 pg_ctl start\n
+      pg bin 15.5 createdb mydatabase\n
+      pg bin 15.5 psql mydatabase\n
+    \n
+    Following arguments and option are auto included:\n
+      Data directory\n
+      Logfile path\n
+      Port number\n
     """
     verobj = getver(ver)
     prgm_path = verobj.builddir / 'bin' / prgm
