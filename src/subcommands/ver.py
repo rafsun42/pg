@@ -32,7 +32,7 @@ def get_versions():
             out.append(v.name)
     return out
 
-def resolve_ver(ver:str):
+def resolve_ver(ver:str) -> str:
     """
     Resolves 'ver'.
 
