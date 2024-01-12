@@ -3,6 +3,7 @@ import typer
 from pathlib import Path
 from typing import Annotated
 from utils.vermgr import Version, getver
+from sys import exit
 
 app = typer.Typer()
 
@@ -19,6 +20,11 @@ def main(
              help="a program in the bin directory"
                   " (i.e. pg_ctl, psql, createdb)"
          )],
+
+         return_path:
+         Annotated[bool, typer.Option("--filepath", "-f",
+              help="prints filepath of the program instead of executing it"
+         )] = False,
 
          args:
          Annotated[list[str], typer.Argument(
@@ -40,6 +46,10 @@ def main(
     """
     verobj = getver(ver)
     prgm_path = verobj.builddir / 'bin' / prgm
+
+    if return_path:
+        print(prgm_path)
+        exit(0)
 
     if not prgm_path.exists():
         # TODO: error
